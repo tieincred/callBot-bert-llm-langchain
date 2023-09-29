@@ -1,0 +1,219 @@
+{
+    "Start Node": [
+        "Deals and offers",
+        "check balance",
+        "account management",
+        "cancel membership",
+        "2",
+        "reason",
+        "exchange",
+        "something else",
+        "cancel",
+        "order",
+        "3",
+        "expensive",
+        "replace",
+        "situation",
+        "upgrade membership",
+        "bill paid",
+        "prime membership",
+        "wallet",
+        "return",
+        "gift card",
+        "Buy or cancel",
+        "payments",
+        "amazon pay balance",
+        "add gift",
+        "source account",
+        "invoice",
+        "security and login",
+        "buy",
+        "no",
+        "warranty",
+        "cash",
+        "uphappy",
+        "1",
+        "yes",
+        "order placed",
+        "undelivered",
+        "KYC"
+    ],
+    "Node 4": [
+        "replace",
+        "amazon pay balance",
+        "source account",
+        "yes",
+        "situation",
+        "reason",
+        "exchange",
+        "return",
+        "no",
+        "undelivered"
+    ],
+    "Node 5": [
+        "replace",
+        "amazon pay balance",
+        "source account",
+        "yes",
+        "situation",
+        "reason",
+        "exchange",
+        "return",
+        "no",
+        "undelivered"
+    ],
+    "Node 6": [
+        "replace",
+        "no",
+        "amazon pay balance",
+        "source account",
+        "yes"
+    ],
+    "Node 7": [
+        "no",
+        "amazon pay balance",
+        "yes",
+        "source account"
+    ],
+    "Node 8": [
+        "no",
+        "yes"
+    ],
+    "Node 2": [
+        "Deals and offers",
+        "check balance",
+        "account management",
+        "cancel membership",
+        "2",
+        "reason",
+        "exchange",
+        "something else",
+        "cancel",
+        "order",
+        "3",
+        "expensive",
+        "replace",
+        "situation",
+        "upgrade membership",
+        "bill paid",
+        "prime membership",
+        "wallet",
+        "return",
+        "gift card",
+        "payments",
+        "amazon pay balance",
+        "add gift",
+        "source account",
+        "invoice",
+        "security and login",
+        "buy",
+        "no",
+        "warranty",
+        "cash",
+        "uphappy",
+        "1",
+        "yes",
+        "order placed",
+        "KYC",
+        "undelivered",
+        "Buy or cancel"
+    ],
+    "Node 3": [
+        "replace",
+        "amazon pay balance",
+        "1",
+        "source account",
+        "yes",
+        "situation",
+        "2",
+        "reason",
+        "exchange",
+        "return",
+        "no",
+        "undelivered",
+        "3"
+    ],
+    "Invoice": [
+        "no",
+        "bill paid",
+        "order placed",
+        "yes"
+    ],
+    "Warranty": [
+        "no",
+        "yes"
+    ],
+    "account manage": [
+        "check balance",
+        "add gift",
+        "yes",
+        "cancel",
+        "wallet",
+        "Buy or cancel",
+        "security and login",
+        "buy",
+        "no",
+        "gift card",
+        "payments",
+        "cash"
+    ],
+    "payments": [
+        "no",
+        "wallet",
+        "yes",
+        "cash"
+    ],
+    "Gifts": [
+        "check balance",
+        "add gift",
+        "cancel",
+        "buy",
+        "no",
+        "yes",
+        "Buy or cancel"
+    ],
+    "Gift Transaction": [
+        "buy",
+        "no",
+        "yes",
+        "cancel"
+    ],
+    "Prime member": [
+        "expensive",
+        "uphappy",
+        "cancel membership",
+        "yes",
+        "upgrade membership",
+        "something else",
+        "no"
+    ],
+    "prime cancel": [
+        "expensive",
+        "uphappy",
+        "something else",
+        "no",
+        "yes"
+    ],
+    "Unhappy": [
+        "no",
+        "yes"
+    ],
+    "Too expensive": [
+        "no",
+        "yes"
+    ],
+    "prime upgrade": [
+        "no",
+        "yes"
+    ],
+    "End Node": [],
+    "Node 9": [
+        "replace"
+    ],
+    "Undelivered Order Node": [
+        "situation"
+    ],
+    "Exchange Order Node": [
+        "reason"
+    ]
+}

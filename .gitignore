@@ -1,0 +1,5 @@
+rasa/
+hf_cache/
+logs/*
+audio_archive/
+audios/*
