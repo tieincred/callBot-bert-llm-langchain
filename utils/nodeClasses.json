@@ -3,7 +3,7 @@
         "Deals and offers",
         "check balance",
         "account management",
-        "cancel membership",
+        "cancel",
         "2",
         "reason",
         "exchange",
@@ -14,13 +14,13 @@
         "expensive",
         "replace",
         "situation",
-        "upgrade membership",
+        "upgrade",
         "bill paid",
         "prime membership",
         "wallet",
         "return",
         "gift card",
-        "Buy or cancel",
+        "transaction",
         "payments",
         "amazon pay balance",
         "add gift",
@@ -83,7 +83,7 @@
         "Deals and offers",
         "check balance",
         "account management",
-        "cancel membership",
+        "cancel",
         "2",
         "reason",
         "exchange",
@@ -94,7 +94,7 @@
         "expensive",
         "replace",
         "situation",
-        "upgrade membership",
+        "upgrade",
         "bill paid",
         "prime membership",
         "wallet",
@@ -116,7 +116,7 @@
         "order placed",
         "KYC",
         "undelivered",
-        "Buy or cancel"
+        "transaction"
     ],
     "Node 3": [
         "replace",
@@ -149,7 +149,7 @@
         "yes",
         "cancel",
         "wallet",
-        "Buy or cancel",
+        "transaction",
         "security and login",
         "buy",
         "no",
@@ -170,7 +170,7 @@
         "buy",
         "no",
         "yes",
-        "Buy or cancel"
+        "transaction"
     ],
     "Gift Transaction": [
         "buy",
@@ -181,9 +181,9 @@
     "Prime member": [
         "expensive",
         "uphappy",
-        "cancel membership",
+        "cancel",
         "yes",
-        "upgrade membership",
+        "upgrade",
         "something else",
         "no"
     ],

@@ -62,7 +62,7 @@ not_happy_node.set_up([node8, node8], ['yes', 'no'], ['yes_cancel.wav', 'no_canc
 expensive_node.set_up([node8, node8], ['yes', 'no'], ['yes_cancel.wav', 'no_cancel.wav'])
 prime_member_cancel.set_up([not_happy_node, expensive_node, node8], ['uphappy', 'expensive', 'something else'], ['unhappy.wav', 'expensive.wav', 'else.wav'])
 prime_member_upgrade.set_up([node8, node8], ['yes', 'no'], ['yes_upgrade.wav', 'no_upgrade.wav'])
-prime_member_node.set_up([prime_member_cancel, prime_member_upgrade], ['cancel membership','upgrade membership'], ['cancel_prime.wav', 'upgrade_prime.wav'])
+prime_member_node.set_up([prime_member_cancel, prime_member_upgrade], ['cancel','upgrade'], ['cancel_prime.wav', 'upgrade_prime.wav'])
 node2.set_up([node3, invoice_node, warranty_node, node8, node8, account_manage, prime_member_node], ['order', 'invoice', 'warranty', 'KYC', 'Deals and offers', 'account management', 'prime membership'], ['audio3.wav', 'invoice.wav', 'warranty.wav', 'kyc.wav', 'deals.wav', 'account.wav', 'prime.wav'])
 node2.classify_current = True
 start_node.set_up([node4, node2], ['yes', 'no'], ['audio4.wav','audio2.wav'])

@@ -22,7 +22,9 @@ model = BertModel.from_pretrained(model_name).to(device)
 def transcript(audio_path):
   transcription = ""
   segments, info = transcript_model.transcribe(audio_path, language='en')
+  print(info)
   for segment in segments:
+      print(segment)
       transcription = transcription + segment.text
   return transcription
 

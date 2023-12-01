@@ -118,7 +118,7 @@ def gradio_interface2_1(input_text=None, input_audio=None):
 # Gradio interface setup
 input_components = [
     gr.inputs.Textbox(lines=2, label="User Input"),
-    gr.inputs.Audio(source='microphone', label="User Audio Input", type='filepath')
+    gr.inputs.Audio(source='microphone', label="User Audio Input", type='filepath', streaming=True)
 ]
 
 output_audio = gr.outputs.Audio(type="filepath", label="Audio Response")

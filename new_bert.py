@@ -1,6 +1,7 @@
 from utils.embedding_calculate import transcript
 from utils.node_bert_wlogger import TalkNode
 from utils.key_word_list import correction_word
+from call_api import get_audio
 import gradio as gr
 import time
 import os
@@ -83,7 +84,7 @@ def chatbot_conversation(input_text, current_node = None, wrongclass=False, most
     node4.set_up([node5, node3], ['yes', 'no'], ['audio7.wav', 'audio12.wav'])
     node3.set_up([node4], ['1', '2', '3'], ['audio4.wav', 'audio5.wav', 'audio6.wav'])
     gift_cancel_buy.set_up([node8, node8], ['buy', 'cancel'],['gift_buy.wav', 'gift_cancel.wav'])
-    gift_node.set_up([node8,node8,gift_cancel_buy], ['add gift', 'check balance', 'Buy or cancel'], ['gift_add.wav', 'check_balance.wav', 'gift_buy_cancel.wav'])
+    gift_node.set_up([node8,node8,gift_cancel_buy], ['add gift card', 'check balance', 'transaction'], ['gift_add.wav', 'check_balance.wav', 'gift_buy_cancel.wav'])
     payments_node.set_up([node8, node8], ['wallet', 'cash'], ['payments_wallet.wav', 'payments_cash.wav'])
     account_manage.set_up([node8, payments_node, gift_node], ['security and login', 'payments', 'gift card'], ["security.wav","payments.wav","gift.wav"])
     warranty_node.set_up([node8, node8], ['yes', 'no'], ['warranty.wav', 'warranty_direction.wav'])
@@ -92,7 +93,7 @@ def chatbot_conversation(input_text, current_node = None, wrongclass=False, most
     expensive_node.set_up([node8, node8], ['yes', 'no'], ['yes_cancel.wav', 'no_cancel.wav'])
     prime_member_cancel.set_up([not_happy_node, expensive_node, node8], ['uphappy', 'expensive', 'something else'], ['unhappy.wav', 'expensive.wav', 'else.wav'])
     prime_member_upgrade.set_up([node8, node8], ['yes', 'no'], ['yes_upgrade.wav', 'no_upgrade.wav'])
-    prime_member_node.set_up([prime_member_cancel, prime_member_upgrade], ['cancel membership','upgrade membership'], ['cancel_prime.wav', 'upgrade_prime.wav'])
+    prime_member_node.set_up([prime_member_cancel, prime_member_upgrade], ['cancel','upgrade'], ['cancel_prime.wav', 'upgrade_prime.wav'])
     node2.set_up([node3, invoice_node, warranty_node, node8, node8, account_manage, prime_member_node], ['order', 'invoice', 'warranty', 'KYC', 'Deals and offers', 'account management', 'prime membership'], ['audio3.wav', 'invoice.wav', 'warranty.wav', 'kyc.wav', 'deals.wav', 'account.wav', 'prime.wav'])
     node2.classify_current = True
     start_node.set_up([node4, node2], ['yes', 'no'], ['audio4.wav','audio2.wav'])
@@ -104,6 +105,7 @@ def chatbot_conversation(input_text, current_node = None, wrongclass=False, most
     # Process the user input and get the next node and audio path
     next_node, audio_path, wrongclass, most_probable_categories, node_stack, audio_stack = current_node.process_text(input_text, wrongclass, most_probable_categories, node_stack, audio_stack)
     end_time = time.time()
+    response_time = end_time-start_time
     print(f"Response time: {end_time-start_time} seconds")
     # Return the next node and audio path
     # get_keywords = True
@@ -133,7 +135,7 @@ def chatbot_conversation(input_text, current_node = None, wrongclass=False, most
 
     #     # Print the updated list_of_words
     #     print(list_of_words)
-    return next_node, audio_path, wrongclass, most_probable_categories, node_stack, audio_stack
+    return next_node, audio_path, wrongclass, most_probable_categories, node_stack, audio_stack, response_time
 
 
 
@@ -157,18 +159,20 @@ def reset_talkbot():
 
 
 
-def gradio_interface2_1(input_text):
+def gradio_interface2_2(input_text):
     global current_node
     global wrongclass
     global most_probable_categories
     global node_stack
     global audio_stack
     if input_text.lower() == 'start':
+        # to generate personalised audio
+        get_audio()
         reset_talkbot()
         print(transcript('audios/audio1.wav'))
         return 'audios/audio1.wav'
     print('before hitting:', wrongclass)
-    next_node, audio_data, wrongclass, most_probable_categories, node_stack, audio_stack = chatbot_conversation(input_text, current_node, wrongclass, most_probable_categories, node_stack, audio_stack)
+    next_node, audio_data, wrongclass, most_probable_categories, node_stack, audio_stack, response_time = chatbot_conversation(input_text, current_node, wrongclass, most_probable_categories, node_stack, audio_stack)
     
     print('after hitting:', wrongclass)
     current_node = next_node
@@ -178,7 +182,7 @@ def gradio_interface2_1(input_text):
         return audio_data  # Return the audio data from the end node
     # print(transcript(audio_data))
     print("****************Talk one done!!****************")
-    return audio_data
+    return audio_data, response_time
 
 
 def gradio_interface2_1(input_text=None, input_audio=None):
@@ -195,10 +199,15 @@ def gradio_interface2_1(input_text=None, input_audio=None):
         user_input = input_text
     
     if user_input.lower() == 'start':
+        # to generate personalised audio
+        res_start = time.time()
+        get_audio()
         reset_talkbot()
-        return 'audios/audio1.wav', 'final_individual_graphs/start_node_final.png'
+        res_end = time.time()
+        response_time = res_end - res_start
+        return 'audios/audio1.wav', 'final_individual_graphs/start_node_final.png', response_time
 
-    next_node, audio_data, wrongclass, most_probable_categories, node_stack, audio_stack = chatbot_conversation(user_input, current_node, wrongclass, most_probable_categories, node_stack, audio_stack)
+    next_node, audio_data, wrongclass, most_probable_categories, node_stack, audio_stack, response_time = chatbot_conversation(user_input, current_node, wrongclass, most_probable_categories, node_stack, audio_stack)
     if next_node:
         graph_image_path = f"final_individual_graphs/{next_node.node_name.replace(' ', '_').lower()}_node_final.png"
         if not os.path.exists(graph_image_path):
@@ -207,9 +216,9 @@ def gradio_interface2_1(input_text=None, input_audio=None):
         graph_image_path = "final_individual_graphs/end_node_final.png"
     current_node = next_node
     if current_node is None:
-        return audio_data
+        return audio_data, graph_image_path, response_time
     
-    return audio_data, graph_image_path
+    return audio_data, graph_image_path, response_time
 
 # # Gradio interface setup
 # input_components = [
@@ -222,17 +231,26 @@ def gradio_interface2_1(input_text=None, input_audio=None):
 # gr.Interface(fn=gradio_interface2_1, inputs=input_components, outputs=output_audio).launch(share=True)
 
 # Gradio interface setup
-input_components = [
-    gr.inputs.Textbox(lines=2, label="User Input"),
-    gr.inputs.Audio(source='microphone', label="User Audio Input", type='filepath')
-]
 
-output_components = [
-    gr.outputs.Audio(type="filepath", label="Audio Response"),
-    gr.outputs.Image(type="filepath", label="Displayed Image")  # Added Image as an output component
-]
 
-gr.Interface(fn=gradio_interface2_1, inputs=input_components, outputs=output_components).launch(share=True)
+if __name__ == "__main__":
+    while True:
+        user_input = input("user: ")
+        file_path, _, _ = gradio_interface2_1(user_input)
+        print("Bot: ",transcript(file_path))
+
+# input_components = [
+#     gr.inputs.Textbox(lines=2, label="User Input"),
+#     gr.inputs.Audio(source='microphone', label="User Audio Input", type='filepath')
+# ]
+
+# output_components = [
+#     gr.outputs.Audio(type="filepath", label="Audio Response"),
+#     gr.outputs.Image(type="filepath", label="Displayed Image"),
+#     gr.outputs.Textbox(label="Response time in the backend")  # Added Image as an output component
+# ]
+
+# gr.Interface(fn=gradio_interface2_1, inputs=input_components, outputs=output_components).launch(share=True)
 # input_text = gr.inputs.Textbox(lines=2, label="User Input")
 # output_audio = gr.outputs.Audio(type="filepath", label="Audio Response")
 # gr.Interface(fn=gradio_interface2_1, inputs=input_text, outputs=output_audio).launch(share=True)
