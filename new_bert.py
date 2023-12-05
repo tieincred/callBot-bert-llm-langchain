@@ -2,6 +2,8 @@ from utils.embedding_calculate import transcript
 from utils.node_bert_wlogger import TalkNode
 from utils.key_word_list import correction_word
 from call_api import get_audio
+from vad import vad_and_save
+from speakout import play_audio
 import gradio as gr
 import time
 import os
@@ -21,16 +23,11 @@ def chatbot_conversation(input_text, current_node = None, wrongclass=False, most
     
     # account management nodes
     account_manage = TalkNode('account manage')
-    login_node = TalkNode('login and security')
     payments_node = TalkNode('payments')
     gift_node = TalkNode('Gifts')
     
     # gift node
-    gift_add_node = TalkNode('Add Gift') 
-    gift_balance_check = TalkNode('Balance Check')
     gift_cancel_buy = TalkNode('Gift Transaction')
-    gift_buy_node = TalkNode('Buy Gift')
-    gift_cancel_node  = TalkNode('Cancel Gift')
 
     # Invoice nodes
     invoice_node = TalkNode('Invoice')
@@ -46,33 +43,6 @@ def chatbot_conversation(input_text, current_node = None, wrongclass=False, most
     not_happy_node = TalkNode('Unhappy')
     expensive_node = TalkNode('Too expensive')
 
-
-    # Set up the relationships between nodes
-    # end_node.set_up(None, ['end'], ['audio21.wav'], end_node=True)
-    # node9.set_up([end_node], ['replace', correction_word], ['audio20.wav', 'audio20.wav'])
-    # node8.set_up([node2, end_node], ['yes', 'no', correction_word], ['audio2.wav','audio17.wav', 'audio2.wav'])
-    # node7.set_up([node8, node8], ['amazon pay balance','source account', correction_word], ['audio10.wav', 'audio14.wav', 'audio10.wav'])
-    # node6.set_up([node7, node9], ['yes', 'replace', correction_word], ['audio9.wav', 'audio13.wav', 'audio9.wav'])
-    # node_undel.set_up([end_node], ['situation', correction_word], ['audio18.wav', 'audio18.wav'])
-    # node_exchange.set_up([end_node], ['reason', correction_word], ['audio19.wav', 'audio19.wav'])
-    # node5.set_up([node6, node_undel, node_exchange], ["return", "undelivered", "exchange", correction_word], ['audio8.wav', 'audio16.wav', 'audio15.wav', 'audio8.wav'])
-    # node4.set_up([node5, node3], ['yes', 'no', correction_word], ['audio7.wav', 'audio12.wav'])
-    # node3.set_up([node4], ['1', '2', '3', correction_word], ['audio4.wav', 'audio5.wav', 'audio6.wav'])
-    # gift_cancel_buy.set_up([node8, node8, correction_word], ['buy', 'cancel'],['gift_buy.wav', 'gift_cancel.wav'])
-    # gift_node.set_up([node8,node8,gift_cancel_buy, correction_word], ['add gift', 'check balance', 'Buy or cancel'], ['gift_add.wav', 'check_balance.wav', 'gift_buy_cancel.wav'])
-    # payments_node.set_up([node8, node8], ['wallet', 'cash', correction_word], ['payments_wallet.wav', 'payments_cash.wav'])
-    # account_manage.set_up([node8, payments_node, gift_node, correction_word], ['security and login', 'payments', 'gift card'], ["security.wav","payments.wav","gift.wav"])
-    # warranty_node.set_up([node8, node8], ['yes', 'no', correction_word], ['warranty.wav', 'warranty_direction.wav'])
-    # invoice_node.set_up([node8, node8], ['bill paid', 'order placed', correction_word], ['bill_paid.wav', 'order_placed.wav'])
-    # not_happy_node.set_up([node8, node8], ['yes', 'no', correction_word], ['yes_cancel.wav', 'no_cancel.wav'])
-    # expensive_node.set_up([node8, node8], ['yes', 'no', correction_word], ['yes_cancel.wav', 'no_cancel.wav'])
-    # prime_member_cancel.set_up([not_happy_node, expensive_node, node8], ['uphappy', 'expensive', 'something else'], ['unhappy.wav', 'expensive.wav', 'else.wav'])
-    # prime_member_upgrade.set_up([node8, node8], ['yes', 'no', correction_word], ['yes_upgrade.wav', 'no_upgrade.wav'])
-    # prime_member_node.set_up([prime_member_cancel, prime_member_upgrade], ['cancel membership','upgrade membership', correction_word], ['cancel_prime.wav', 'upgrade_prime.wav'])
-    # node2.set_up([node3, invoice_node, warranty_node, node8, node8, account_manage, prime_member_node], ['order', 'invoice', 'warranty', 'KYC', 'Deals and offers', 'account management', 'prime membership', correction_word], ['audio3.wav', 'invoice.wav', 'warranty.wav', 'kyc.wav', 'deals.wav', 'account.wav', 'prime.wav'])
-    # node2.classify_current = True
-    # start_node.set_up([node4, node2], ['yes', 'no', correction_word], ['audio4.wav','audio2.wav'])
-    # Set up the relationships between nodes
     end_node.set_up([None], ['end'], ['audio21.wav'], end_node=True)
     node9.set_up([end_node], ['replace'], ['audio20.wav', 'audio20.wav'])
     node8.set_up([node2, end_node], ['yes', 'no'], ['audio2.wav','audio17.wav', 'audio2.wav'])
@@ -107,34 +77,6 @@ def chatbot_conversation(input_text, current_node = None, wrongclass=False, most
     end_time = time.time()
     response_time = end_time-start_time
     print(f"Response time: {end_time-start_time} seconds")
-    # Return the next node and audio path
-    # get_keywords = True
-    # if get_keywords:
-    #     # List of nodes and classes
-    #     nodes = [
-    #         end_node, node9, node8, node7, node6, node_undel, node_exchange,
-    #         node5, node4, node3, gift_cancel_buy, gift_node, payments_node, 
-    #         account_manage, warranty_node, invoice_node, not_happy_node, 
-    #         expensive_node, prime_member_cancel, prime_member_upgrade, 
-    #         prime_member_node, node2, start_node,
-    #     ]
-
-    #     # Initialize an empty list to store classes
-    #     list_of_words = []
-
-    #     # Iterate through nodes and append classes to list_of_words
-    #     for node in nodes:
-    #         classes = node.categories
-    #         list_of_words.extend(classes)
-
-    #     # Remove duplicates by converting list_of_words to a set and then back to a list
-    #     list_of_words = list(set(list_of_words))
-
-    #     # Sort the list of words
-    #     list_of_words.sort()
-
-    #     # Print the updated list_of_words
-    #     print(list_of_words)
     return next_node, audio_path, wrongclass, most_probable_categories, node_stack, audio_stack, response_time
 
 
@@ -220,37 +162,12 @@ def gradio_interface2_1(input_text=None, input_audio=None):
     
     return audio_data, graph_image_path, response_time
 
-# # Gradio interface setup
-# input_components = [
-#     gr.inputs.Textbox(lines=2, label="User Input"),
-#     gr.inputs.Audio(source='microphone', label="User Audio Input", type='filepath')
-# ]
-
-# output_audio = gr.outputs.Audio(type="filepath", label="Audio Response")
-
-# gr.Interface(fn=gradio_interface2_1, inputs=input_components, outputs=output_audio).launch(share=True)
-
-# Gradio interface setup
-
-
 if __name__ == "__main__":
+    input_user = input("Type start and press enter to start: ")
+    file_path, _, _ = gradio_interface2_1(input_user)
+    play_audio(file_path)
     while True:
-        user_input = input("user: ")
-        file_path, _, _ = gradio_interface2_1(user_input)
+        user_input = vad_and_save()
+        file_path, _, _ = gradio_interface2_1(input_audio=user_input)
+        play_audio(file_path)
         print("Bot: ",transcript(file_path))
-
-# input_components = [
-#     gr.inputs.Textbox(lines=2, label="User Input"),
-#     gr.inputs.Audio(source='microphone', label="User Audio Input", type='filepath')
-# ]
-
-# output_components = [
-#     gr.outputs.Audio(type="filepath", label="Audio Response"),
-#     gr.outputs.Image(type="filepath", label="Displayed Image"),
-#     gr.outputs.Textbox(label="Response time in the backend")  # Added Image as an output component
-# ]
-
-# gr.Interface(fn=gradio_interface2_1, inputs=input_components, outputs=output_components).launch(share=True)
-# input_text = gr.inputs.Textbox(lines=2, label="User Input")
-# output_audio = gr.outputs.Audio(type="filepath", label="Audio Response")
-# gr.Interface(fn=gradio_interface2_1, inputs=input_text, outputs=output_audio).launch(share=True)

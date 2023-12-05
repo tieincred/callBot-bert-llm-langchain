@@ -6,14 +6,16 @@ import time
 from utils.embedding_calculate import transcript
 from tqdm import tqdm
 
+os.environ['SUNO_USE_SMALL_MODELS'] = 'True'
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 processor = AutoProcessor.from_pretrained("suno/bark")
-optimised = False
+optimised = True
 
 if not optimised:
     start = time.time()
     model = BarkModel.from_pretrained("suno/bark").to(device)
+    model = model.to_bettertransformer()
 
 else:
     start = time.time()
@@ -71,11 +73,14 @@ def generate_audios_from_transcriptions(json_path, output_folder):
         if not os.path.exists(out_name):
             generate_audio(text, voice_preset, processor, model, out_name)
 
-
+start = time.time()
 generate_audio("So, you want help with an Item you ordered right?", voice_preset, processor, model, 'audio3.wav')
+end = time.time()
+
+print(f"time taken: {end-start} seconds.")
 # Example usage
 json_path = "transcription.json"
-output_folder = "/media/pixis-ubuntu-20/pixis/tausif_workspace/chatbot/chat_bot/chatbotv3/audios"
+output_folder = "new_audios"
 generate_audios_from_transcriptions(json_path, output_folder)
 
 # files = os.listdir('audios')
